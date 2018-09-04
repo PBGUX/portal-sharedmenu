@@ -1,0 +1,32 @@
+{
+  "name": "devportal-json-menu",
+  "version": "0.0.1",
+  "main": "./dist/menu.js",
+  "description": "json menu",
+  "homepage": "https://github.com/PBGUX/portal-sharedmenu.git",
+  "private": false,
+  "authors": [
+    "Ravi Kumar"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/PBGUX/portal-sharedmenu.git"
+  },
+  "keywords": [
+    "angular"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "angular": "1.2.x",
+    "angular-mocks": "~1.2.x"
+  },
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "build.conf.js",
+    "gulpfile.js",
+    "karma.conf.js",
+    "package.json"
+  ]
+}
