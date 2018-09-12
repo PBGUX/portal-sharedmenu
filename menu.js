@@ -110,7 +110,7 @@
        self.selectedTab = [];
 
        self.selectedTabFn   = function(menuSelected){
-           console.log(self.selectedTab, '<<< self.selectedTab');
+           //console.log(self.selectedTab, '<<< self.selectedTab');
            for(var key in self.selectedTab)
                if(self.selectedTab[key] === menuSelected){
                    return menuSelected;
@@ -174,14 +174,17 @@
                if(currentLocation){    
                    self.leftmenu = self.menuItems[currentLocation].subMenu;    
 
-                   console.log(self.selectedTab.length, '<< self.selectedTab.length');
+                   //console.log(self.selectedTab.length, '<< self.selectedTab.length');
                    if(!self.selectedTab.length){
-                       var searchFilter = search(self.leftmenu, currentUrl);
-                       self.selectedTab.push(searchFilter.menuSelected);
+                        var searchFilter = search(self.leftmenu, currentUrl);
 
-                       if(searchFilter.parentMenuSelected)
-                           self.selectedTab.push(searchFilter.parentMenuSelected);
-                   }
+                        if(searchFilter){
+                            self.selectedTab.push(searchFilter.menuSelected);
+
+                            if(searchFilter.parentMenuSelected)
+                                self.selectedTab.push(searchFilter.parentMenuSelected);
+                            }    
+                        }
                }    
 
            }).catch(function (err) {
