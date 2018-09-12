@@ -152,14 +152,15 @@
                var currentUrl = $location.absUrl(); 
                var currentLocation = null;
 
-               if(currentUrl.indexOf('identify') !== -1)
-               currentLocation = 'identify';
-               else if(currentUrl.indexOf('software-apis') !== -1)
-               currentLocation = 'LBS';
-               else if(currentUrl.indexOf('shipping') !== -1)
+               if(currentUrl.indexOf('identify') !== -1 || currentUrl.indexOf('learn-pages-qa.devportal.pitneycloud.com') || currentUrl.indexOf('identify.pitneybowes.com')){
+                   currentLocation = 'identify';
+               }else if(currentUrl.indexOf('software-apis') !== -1 || currentUrl.indexOf('lilearn-qa.saase2e.pitneycloud.com') || currentUrl.indexOf('locate.pitneybowes.com')){
+                    currentLocation = 'LBS';
+               }else if(currentUrl.indexOf('shipping') !== -1){
                currentLocation = 'Vulcan';
-               else if(currentUrl.indexOf('excelapp') !== -1)
+               }else if(currentUrl.indexOf('excelapp') !== -1){
                currentLocation = 'ValidateAddress';
+			   }
                    
                self.menuItems = res.data.main_menu;
                self.rightMenu = res.data.right_menu;
