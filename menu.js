@@ -16,7 +16,7 @@
        //template replaces the complete element with its text. 
        directive.template = '<div class="list-group" id="getStartlist">'+
        '<span ng-repeat="lmitem in MenuCtrl.leftmenu">'+
-       '  <a class="list-group-item" ng-click="MenuCtrl.setSelectedMenu(lmitem.menuSelected, lmitem.childMenuSelected)" ng-class="MenuCtrl.selectedTabFn(lmitem.menuSelected) === lmitem.menuSelected ? \'active\' : \'\'" href="{{lmitem.href}}">{{lmitem.name}}</a>'+
+       '  <a ng-if="(lmitem.hideWhenIn !== \'microPortal\' || MenuCtrl.microPortal !== true )" class="list-group-item" ng-click="MenuCtrl.setSelectedMenu(lmitem.menuSelected, lmitem.childMenuSelected)" ng-class="MenuCtrl.selectedTabFn(lmitem.menuSelected) === lmitem.menuSelected ? \'active\' : \'\'" href="{{lmitem.href}}">{{lmitem.name}}</a>'+
        '  <span ng-repeat="subitem in lmitem.subMenu">'+
        '     <a class="list-group-item childitem" ng-click="MenuCtrl.setSelectedMenu(subitem.menuSelected, subitem.parentMenuSelected)" ng-class="MenuCtrl.selectedTabFn(subitem.menuSelected) === subitem.menuSelected ? \'active\' : MenuCtrl.selectedTabFn(subitem.menuSelected) === subitem.menuSelected ||  MenuCtrl.selectedTabFn(subitem.parentMenuSelected) === subitem.parentMenuSelected ? \'\' : \'hideitem\'" href="{{subitem.href}}">{{subitem.name}}</a>'+
        '  </span>'+   
@@ -149,19 +149,21 @@
        self.getmenu = function(login){
            $http.get('/api/menu/build/'+login+'/mainMenu/'+$rootScope.currentPortal+'/'+productType)
            .then(function (res) {
-               var currentUrl = $location.absUrl(); 
+               var currentUrl      = $location.absUrl(); 
                var currentLocation = null;
+               self.microPortal    = res.data.microPortal; 
 
-               if(currentUrl.indexOf('identify') !== -1 || currentUrl.indexOf('learn-pages-qa.devportal.pitneycloud.com') || currentUrl.indexOf('identify.pitneybowes.com')){
-                   currentLocation = 'identify';
-               }else if(currentUrl.indexOf('software-apis') !== -1 || currentUrl.indexOf('lilearn-qa.saase2e.pitneycloud.com') || currentUrl.indexOf('locate.pitneybowes.com')){
-                    currentLocation = 'LBS';
+               if(currentUrl.indexOf('identify') !== -1 || currentUrl.indexOf('learn-pages-qa.devportal.pitneycloud.com') !== -1 || currentUrl.indexOf('identify.pitneybowes.com') !== -1){
+                   currentLocation = 'identify';  
+               }else if(currentUrl.indexOf('software-apis') !== -1 || currentUrl.indexOf('lilearn-qa.saase2e.pitneycloud.com') !== -1 || currentUrl.indexOf('locate.pitneybowes.com') !== -1){
+                   currentLocation = 'LBS';  
                }else if(currentUrl.indexOf('shipping') !== -1){
-               currentLocation = 'Vulcan';
+                   currentLocation = 'Vulcan';
                }else if(currentUrl.indexOf('excelapp') !== -1){
-               currentLocation = 'ValidateAddress';
+                   currentLocation = 'ValidateAddress';
 			   }
                    
+               console.log(self.microPortal, '<<<<<<<<<<<<<< self.microPortal >>>'+currentLocation);
                self.menuItems = res.data.main_menu;
                self.rightMenu = res.data.right_menu;
                self.products = {
