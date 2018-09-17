@@ -17,9 +17,9 @@
        directive.template = '<div class="list-group" id="getStartlist">'+
        '<span ng-repeat="lmitem in MenuCtrl.leftmenu">'+
        '  <a class="list-group-item" ng-click="MenuCtrl.setSelectedMenu(lmitem.menuSelected, lmitem.childMenuSelected)" ng-class="MenuCtrl.selectedTabFn(lmitem.menuSelected) === lmitem.menuSelected ? \'active\' : \'\'" href="{{lmitem.href}}">{{lmitem.name}}</a>'+
-       '<span ng-repeat="subitem in lmitem.subMenu">'+
-       '  <a class="list-group-item childitem" ng-click="MenuCtrl.setSelectedMenu(subitem.menuSelected, subitem.parentMenuSelected)" ng-class="MenuCtrl.selectedTabFn(subitem.menuSelected) === subitem.menuSelected ? \'active\' : MenuCtrl.selectedTabFn(subitem.menuSelected) === subitem.menuSelected ||  MenuCtrl.selectedTabFn(subitem.parentMenuSelected) === subitem.parentMenuSelected ? \'\' : \'hideitem\'" href="{{subitem.href}}">{{subitem.name}}</a>'+
-       '</span>'+   
+       '  <span ng-repeat="subitem in lmitem.subMenu">'+
+       '     <a class="list-group-item childitem" ng-click="MenuCtrl.setSelectedMenu(subitem.menuSelected, subitem.parentMenuSelected)" ng-class="MenuCtrl.selectedTabFn(subitem.menuSelected) === subitem.menuSelected ? \'active\' : MenuCtrl.selectedTabFn(subitem.menuSelected) === subitem.menuSelected ||  MenuCtrl.selectedTabFn(subitem.parentMenuSelected) === subitem.parentMenuSelected ? \'\' : \'hideitem\'" href="{{subitem.href}}">{{subitem.name}}</a>'+
+       '  </span>'+   
        '</span>'+
        '</div>';
        directive.controller  = 'MenuController';
@@ -71,7 +71,7 @@
        '            {{subMenu.name}}'+
        '          </a>'+
        '        </li>'+
-       '        <li ng-if="menuItem.dropdownMenu" style="width:250px;padding:20px;">'+
+       '        <li ng-if="menuItem.dropdownMenu" style="width:250px;padding:20px;cursor: default;">'+
        '           <div ng-if="MenuCtrl.products.subscribed.length" class="mute" style="padding-bottom:10px;">My APIs</div>'+
        '           <span ng-repeat="s in MenuCtrl.products.subscribed">'+
        '               <span ng-if="menuItem.dropdownMenu[s].type == \'html\'" ng-bind-html="MenuCtrl.renderHtml(menuItem.dropdownMenu[s].htmlCode)"></span>'+
