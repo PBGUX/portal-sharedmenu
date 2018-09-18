@@ -152,8 +152,10 @@
                var currentUrl      = $location.absUrl(); 
                var currentLocation = null;
                self.microPortal    = res.data.microPortal; 
-
-               if(currentUrl.indexOf('identify') !== -1 || currentUrl.indexOf('learn-pages-qa.devportal.pitneycloud.com') !== -1 || currentUrl.indexOf('identify.pitneybowes.com') !== -1){
+               
+               if(self.microPortal){
+                 currentLocation = res.data.currentLocation; 
+               }else if(currentUrl.indexOf('identify') !== -1){
                    currentLocation = 'identify';  
                }else if(currentUrl.indexOf('software-apis') !== -1 || currentUrl.indexOf('lilearn-qa.saase2e.pitneycloud.com') !== -1 || currentUrl.indexOf('locate.pitneybowes.com') !== -1){
                    currentLocation = 'LBS';  
