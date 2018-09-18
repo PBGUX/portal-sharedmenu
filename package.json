@@ -1,0 +1,22 @@
+{
+  "name": "portal-sharedmenu",
+  "version": "1.0.0",
+  "description": "",
+  "main": "menu.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PBGUX/portal-sharedmenu.git"
+  },
+  "keywords": [
+    "portal-sharedmenu"
+  ],
+  "author": "ravi kumar",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PBGUX/portal-sharedmenu/issues"
+  },
+  "homepage": "https://github.com/PBGUX/portal-sharedmenu#readme"
+}
