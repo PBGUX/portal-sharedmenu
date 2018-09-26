@@ -72,7 +72,7 @@
        '          </a>'+
        '        </li>'+
        '        <li ng-if="menuItem.dropdownMenu" style="width:250px;padding:20px;cursor: default;">'+
-       '           <div ng-if="MenuCtrl.products.subscribed.length" class="mute" style="padding-bottom:10px;">My APIs</div>'+
+       '           <div ng-if="MenuCtrl.products.subscribed.length" class="mute" style="padding-bottom:10px;">My Apis</div>'+
        '           <span ng-repeat="s in MenuCtrl.products.subscribed">'+
        '               <span ng-if="menuItem.dropdownMenu[s].type == \'html\'" ng-bind-html="MenuCtrl.renderHtml(menuItem.dropdownMenu[s].htmlCode)"></span>'+
        '           </span>'+
@@ -108,27 +108,8 @@
    function MenuController($rootScope, $http, $stateParams, $sce, $location, $filter) {
        var self = this;
        self.selectedTab = [];
-
-       self.selectedTabFn   = function(menuSelected){
-           //console.log(self.selectedTab, '<<< self.selectedTab');
-           for(var key in self.selectedTab)
-               if(self.selectedTab[key] === menuSelected){
-                   return menuSelected;
-                   break;
-               } 
-               
-           return false;    
-       }
-
-       self.setSelectedMenu = function(menuSelected, parentChildSelection){
-           self.selectedTab = [];
-           self.selectedTab.push(menuSelected);
-
-           console.log(parentChildSelection, '<<<< parentChildSelection');
-           if(parentChildSelection)
-           self.selectedTab.push(parentChildSelection);
-       }
-       
+       self.currentLocation = null;
+       var microPortalStatus = false; 
        //let email = oktaData.login;
        var productType = 'default';
        self.currentPortal = $rootScope.currentPortal;
@@ -146,51 +127,26 @@
            self.getmenu('unauth');
        });
 
-       self.getmenu = function(login){
-           $http.get('/api/menu/build/'+login+'/mainMenu/'+$rootScope.currentPortal+'/'+productType)
-           .then(function (res) {
-               var currentUrl      = $location.absUrl(); 
-               var currentLocation = null;
-               self.microPortal    = res.data.microPortal; 
-               
-               if(self.microPortal){
-                 currentLocation = res.data.currentLocation; 
-               }else if(currentUrl.indexOf('identify') !== -1){
-                   currentLocation = 'identify';  
-               }else if(currentUrl.indexOf('software-apis') !== -1 || currentUrl.indexOf('lilearn-qa.saase2e.pitneycloud.com') !== -1 || currentUrl.indexOf('locate.pitneybowes.com') !== -1){
-                   currentLocation = 'LBS';  
-               }else if(currentUrl.indexOf('shipping') !== -1){
-                   currentLocation = 'Vulcan';
-               }else if(currentUrl.indexOf('excelapp') !== -1){
-                   currentLocation = 'ValidateAddress';
-			   }
+        self.getmenu = function(login){
+            $http.get('/api/menu/build/'+login+'/mainMenu/'+$rootScope.currentPortal+'/'+productType)
+            .then(function (res) {
+                self.microPortal  = res.data.microPortal; 
+                microPortalStatus = res.data.currentLocation;
+
+                getCurrentLocation($location.absUrl(), microPortalStatus);
                    
-               console.log(self.microPortal, '<<<<<<<<<<<<<< self.microPortal >>>'+currentLocation);
-               self.menuItems = res.data.main_menu;
-               self.rightMenu = res.data.right_menu;
-               self.products = {
+                console.log(self.microPortal, '<<<<<<<<<<<<<< self.microPortal >>>'+self.currentLocation);
+                self.menuItems = res.data.main_menu;
+                self.rightMenu = res.data.right_menu;
+                self.products = {
                    'subscribed':[],
                    'notsubscribed':[]
                }
 
-               for(var key in res.data.hasProducts)
+                for(var key in res.data.hasProducts)
                    res.data.hasProducts[key] ? self.products['subscribed'].push(key) : self.products['notsubscribed'].push(key);
 
-               if(currentLocation){    
-                   self.leftmenu = self.menuItems[currentLocation].subMenu;    
-
-                   //console.log(self.selectedTab.length, '<< self.selectedTab.length');
-                   if(!self.selectedTab.length){
-                        var searchFilter = search(self.leftmenu, currentUrl);
-
-                        if(searchFilter){
-                            self.selectedTab.push(searchFilter.menuSelected);
-
-                            if(searchFilter.parentMenuSelected)
-                                self.selectedTab.push(searchFilter.parentMenuSelected);
-                            }    
-                        }
-               }    
+                displayLeftmenu();   
 
            }).catch(function (err) {
                console.log("Got getMenu Err :",err);
@@ -215,6 +171,61 @@
                    break;
                }      
            }
-       }        
+       }
+       
+       var displayLeftmenu = function(){
+            if(self.currentLocation){    
+                self.leftmenu = self.menuItems[self.currentLocation].subMenu;    
+
+                var searchFilter = search(self.leftmenu, $location.absUrl());
+                self.selectedTab = [];
+                
+                if(searchFilter){
+                    self.selectedTab.push(searchFilter.menuSelected);
+
+                    if(searchFilter.parentMenuSelected)
+                        self.selectedTab.push(searchFilter.parentMenuSelected);
+                }
+            } 
+       }
+
+       var getCurrentLocation = function(currentUrl, microPortalStatus){
+           if(self.microPortal){
+            self.currentLocation = microPortalStatus; 
+           }else if(currentUrl.indexOf('identify') !== -1){
+            self.currentLocation = 'identify';  
+           }else if(currentUrl.indexOf('software-apis') !== -1 || currentUrl.indexOf('lilearn-qa.saase2e.pitneycloud.com') !== -1 || currentUrl.indexOf('locate.pitneybowes.com') !== -1){
+            self.currentLocation = 'LBS';  
+           }else if(currentUrl.indexOf('shipping') !== -1){
+            self.currentLocation = 'Vulcan';
+           }else if(currentUrl.indexOf('excelapp') !== -1){
+            self.currentLocation = 'ValidateAddress';
+           }
+       }
+
+       self.selectedTabFn   = function(menuSelected){
+                        
+            getCurrentLocation($location.absUrl(), microPortalStatus); // get which section of the portal user is in
+
+            displayLeftmenu();
+
+            console.log(self.selectedTab, '<<< self.selectedTab');
+            for(var key in self.selectedTab)
+                if(self.selectedTab[key] === menuSelected){
+                    return menuSelected;
+                    break;
+                } 
+                
+            return false;
+        }
+
+        self.setSelectedMenu = function(menuSelected, parentChildSelection){
+            self.selectedTab = [];
+            self.selectedTab.push(menuSelected);
+
+            console.log(menuSelected+'<>'+parentChildSelection, '<<<< parentChildSelection');
+            if(parentChildSelection)
+            self.selectedTab.push(parentChildSelection);
+        }
    }
 }());
