@@ -16,9 +16,12 @@
        //template replaces the complete element with its text. 
        directive.template = '<div class="list-group" id="getStartlist">'+
        '<span ng-repeat="lmitem in MenuCtrl.leftmenu">'+
-       '  <a ng-if="(lmitem.hideWhenIn !== \'microPortal\' || MenuCtrl.microPortal !== true )" class="list-group-item" ng-click="MenuCtrl.setSelectedMenu(lmitem.menuSelected, lmitem.childMenuSelected)" ng-class="MenuCtrl.selectedTabFn(lmitem.menuSelected) === lmitem.menuSelected ? \'active\' : \'\'" href="{{lmitem.href}}">{{lmitem.name}}</a>'+
+       '  <a ng-if="(lmitem.hideWhenIn !== \'microPortal\' || MenuCtrl.microPortal !== true )" class="list-group-item" ng-click="MenuCtrl.setSelectedMenu(lmitem.menuSelected, lmitem.childMenuSelected)" ng-class="MenuCtrl.selectedTabFn(lmitem.menuSelected) === lmitem.menuSelected ? \'active\' : \'\'" href="{{lmitem.href}}" target="{{lmitem.target}}">{{lmitem.name}}</a>'+
        '  <span ng-repeat="subitem in lmitem.subMenu">'+
-       '     <a class="list-group-item childitem" ng-click="MenuCtrl.setSelectedMenu(subitem.menuSelected, subitem.parentMenuSelected)" ng-class="MenuCtrl.selectedTabFn(subitem.menuSelected) === subitem.menuSelected ? \'active\' : MenuCtrl.selectedTabFn(subitem.menuSelected) === subitem.menuSelected ||  MenuCtrl.selectedTabFn(subitem.parentMenuSelected) === subitem.parentMenuSelected ? \'\' : \'hideitem\'" href="{{subitem.href}}">{{subitem.name}}</a>'+
+       '     <a class="list-group-item childitem"'+ 
+       '        ng-click="MenuCtrl.setSelectedMenu(subitem.menuSelected, subitem.parentMenuSelected)"' +
+       '        ng-class="MenuCtrl.selectedTabFn(subitem.menuSelected) === subitem.menuSelected ? \'active\' : MenuCtrl.selectedTabFn(subitem.menuSelected) === subitem.menuSelected ||  MenuCtrl.selectedTabFn(subitem.parentMenuSelected) === subitem.parentMenuSelected ? \'\' : \'hideitem\'"' + 
+       '        href="{{subitem.href}}" target="{{subitem.target}}" >{{subitem.name}}</a>'+
        '  </span>'+   
        '</span>'+
        '</div>';
@@ -60,6 +63,7 @@
        '  <ul id="headerright-devportal" class="nav navbar-nav navbar-right">'+
        '    <!-- Help menu-->'+
        '    <li class="divider-vertical hidden-xs"> </li>'+
+       '    <li class="dropdown" ng-if="MenuCtrl.spinnerRun"><a href="#"><i class="nc-icon-mini loader_circle-04 spin x1 text-white"  aria-label="loading"></i></a></li>'+
        '    <li ng-repeat="menuItem in MenuCtrl.rightMenu" class="dropdown">'+
        '      <a href="{{menuItem.href}}" data-toggle="{{menuItem.dataToggle}}" {{menuItem.attributes}}="{{menuItem.attributes}}" ng-class="{\'selected-tab\': (MenuCtrl.selectedTab == menuItem.menuSelected)}"> '+
        '        <span ng-if="menuItem.type == \'text\'">{{menuItem.name}}</span>'+
@@ -118,7 +122,7 @@
            $rootScope.currentPortal = 'devPortal';
        else if($rootScope.currentPortal === 'appPortal')
            productType = $rootScope.productType;
-
+       self.spinnerRun = true;
        $http.get('https://pitneybowes.oktapreview.com/api/v1/sessions/me', {withCredentials: true})
        .then(function(response) {
            var email = (typeof response.data !== 'undefined' && typeof response.data.login !== 'undefined') ? response.data.login : 'unauth';
@@ -148,8 +152,11 @@
 
                 displayLeftmenu();   
 
+                self.spinnerRun = false;
+
            }).catch(function (err) {
                console.log("Got getMenu Err :",err);
+               self.spinnerRun = false;
            });
        }
 
@@ -209,7 +216,7 @@
 
             displayLeftmenu();
 
-            console.log(self.selectedTab, '<<< self.selectedTab');
+            console.log(self.selectedTab, 'from selectedTabFn');
             for(var key in self.selectedTab)
                 if(self.selectedTab[key] === menuSelected){
                     return menuSelected;
