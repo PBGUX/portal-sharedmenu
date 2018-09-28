@@ -234,5 +234,10 @@
             if(parentChildSelection)
             self.selectedTab.push(parentChildSelection);
         }
+
+        $rootScope.$on("locationUpdate",function (event, Portalinfo) {
+            console.log(Portalinfo, "<<<from dbheader $rootScope.PortalLocation");
+            displayLeftmenu();
+        });
    }
 }());
