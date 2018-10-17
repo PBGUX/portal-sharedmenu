@@ -117,13 +117,13 @@
        //let email = oktaData.login;
        var productType = 'default';
        self.currentPortal = $rootScope.currentPortal;
-           
+    
        if(typeof $rootScope.currentPortal === 'undefined') 
            $rootScope.currentPortal = 'devPortal';
        else if($rootScope.currentPortal === 'appPortal')
            productType = $rootScope.productType;
        self.spinnerRun = true;
-       $http.get('https://pitneybowes.oktapreview.com/api/v1/sessions/me', {withCredentials: true})
+       $http.get(window.oktaHostURL+'api/v1/sessions/me', {withCredentials: true})
        .then(function(response) {
            var email = (typeof response.data !== 'undefined' && typeof response.data.login !== 'undefined') ? response.data.login : 'unauth';
            self.getmenu(email);
@@ -139,7 +139,7 @@
 
                 getCurrentLocation($location.absUrl(), microPortalStatus);
                    
-                console.log(self.microPortal, '<<<<<<<<<<<<<< self.microPortal >>>'+self.currentLocation);
+                //console.log(self.microPortal, '<<<<<<<<<<<<<< self.microPortal >>>'+self.currentLocation);
                 self.menuItems = res.data.main_menu;
                 self.rightMenu = res.data.right_menu;
                 self.products = {
@@ -155,7 +155,7 @@
                 self.spinnerRun = false;
 
            }).catch(function (err) {
-               console.log("Got getMenu Err :",err);
+               //console.log("Got getMenu Err :",err);
                self.spinnerRun = false;
            });
        }
@@ -216,7 +216,7 @@
 
             displayLeftmenu();
 
-            console.log(self.selectedTab, 'from selectedTabFn');
+            //console.log(self.selectedTab, 'from selectedTabFn');
             for(var key in self.selectedTab)
                 if(self.selectedTab[key] === menuSelected){
                     return menuSelected;
@@ -230,13 +230,13 @@
             self.selectedTab = [];
             self.selectedTab.push(menuSelected);
 
-            console.log(menuSelected+'<>'+parentChildSelection, '<<<< parentChildSelection');
+            //console.log(menuSelected+'<>'+parentChildSelection, '<<<< parentChildSelection');
             if(parentChildSelection)
             self.selectedTab.push(parentChildSelection);
         }
 
         $rootScope.$on("locationUpdate",function (event, Portalinfo) {
-            console.log(Portalinfo, "<<<from dbheader $rootScope.PortalLocation");
+            //console.log(Portalinfo, "<<<from dbheader $rootScope.PortalLocation");
             displayLeftmenu();
         });
    }
