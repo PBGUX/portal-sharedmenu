@@ -207,6 +207,8 @@
             self.currentLocation = 'Vulcan';
            }else if(currentUrl.indexOf('excelapp') !== -1){
             self.currentLocation = 'ValidateAddress';
+           }else if(currentUrl.indexOf('gsuite') !== -1){
+            self.currentLocation = 'ValidateAddressGSuite';
            }
        }
 
