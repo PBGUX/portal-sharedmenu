@@ -199,10 +199,10 @@
        var getCurrentLocation = function(currentUrl, microPortalStatus){
            if(self.microPortal){
             self.currentLocation = microPortalStatus; 
-           }else if(currentUrl.indexOf('identify') !== -1){
-            self.currentLocation = 'identify';  
            }else if(currentUrl.indexOf('software-apis') !== -1 || currentUrl.indexOf('lilearn-qa.saase2e.pitneycloud.com') !== -1 || currentUrl.indexOf('locate.pitneybowes.com') !== -1){
             self.currentLocation = 'LBS';  
+           }else if(currentUrl.indexOf('identify') !== -1  || currentUrl.indexOf('learn-pages-qa.devportal.pitneycloud.com') !== -1){
+            self.currentLocation = 'identify';  
            }else if(currentUrl.indexOf('shipping') !== -1){
             self.currentLocation = 'Vulcan';
            }else if(currentUrl.indexOf('excelapp') !== -1){
