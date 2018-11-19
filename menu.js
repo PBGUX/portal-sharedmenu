@@ -181,7 +181,7 @@
        }
        
        var displayLeftmenu = function(){
-            if(self.currentLocation){    
+            if(self.currentLocation && typeof self.menuItems[self.currentLocation] !== 'undefined'){     
                 self.leftmenu = self.menuItems[self.currentLocation].subMenu;    
 
                 var searchFilter = search(self.leftmenu, $location.absUrl());
