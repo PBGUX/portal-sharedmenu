@@ -76,11 +76,11 @@
        '          </a>'+
        '        </li>'+
        '        <li ng-if="menuItem.dropdownMenu" style="width:250px;padding:20px;cursor: default;">'+
-       '           <div ng-if="MenuCtrl.products.subscribed.length" class="mute" style="padding-bottom:10px;">My Apis</div>'+
+       '           <div ng-if="MenuCtrl.myapis" class="mute" style="padding-bottom:10px;">My Apis</div>'+
        '           <span ng-repeat="s in MenuCtrl.products.subscribed">'+
        '               <span ng-if="menuItem.dropdownMenu[s].type == \'html\'" ng-bind-html="MenuCtrl.renderHtml(menuItem.dropdownMenu[s].htmlCode)"></span>'+
        '           </span>'+
-       '           <hr>'+
+       '           <hr ng-if="MenuCtrl.myapis">'+
        '           <div ng-if="MenuCtrl.products.notsubscribed.length" class="mute" style="padding-bottom:10px;">Developer Hub APIs</div>'+
        '           <span ng-repeat="ns in MenuCtrl.products.notsubscribed">'+
        '             <span ng-if="menuItem.dropdownMenu[ns].type == \'html\'" ng-bind-html="MenuCtrl.renderHtml(menuItem.dropdownMenu[ns].htmlCode)"></span>'+
@@ -117,6 +117,7 @@
        //let email = oktaData.login;
        var productType = 'default';
        self.currentPortal = $rootScope.currentPortal;
+       self.myapis = false;
     
        if(typeof $rootScope.currentPortal === 'undefined') 
            $rootScope.currentPortal = 'devPortal';
@@ -145,14 +146,16 @@
                 self.products = {
                    'subscribed':[],
                    'notsubscribed':[]
-               }
+                }
 
                 for(var key in res.data.hasProducts)
                    res.data.hasProducts[key] ? self.products['subscribed'].push(key) : self.products['notsubscribed'].push(key);
 
-                displayLeftmenu();   
+			    (self.products.subscribed.length > 1) ? self.myapis = true :  self.myapis = false; 
+                
+				displayLeftmenu();   
 
-                self.spinnerRun = false;
+                self.spinnerRun = false; 
 
            }).catch(function (err) {
                //console.log("Got getMenu Err :",err);
