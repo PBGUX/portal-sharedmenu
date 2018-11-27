@@ -124,9 +124,11 @@
        else if($rootScope.currentPortal === 'appPortal')
            productType = $rootScope.productType;
        self.spinnerRun = true;
+       var email;
+       
        $http.get(window.oktaHostURL+'api/v1/sessions/me', {withCredentials: true})
        .then(function(response) {
-           var email = (typeof response.data !== 'undefined' && typeof response.data.login !== 'undefined') ? response.data.login : 'unauth';
+           email = (typeof response.data !== 'undefined' && typeof response.data.login !== 'undefined') ? response.data.login : 'unauth';
            self.getmenu(email);
        }, function(response) {
            self.getmenu('unauth');
@@ -243,6 +245,10 @@
         $rootScope.$on("locationUpdate",function (event, Portalinfo) {
             //console.log(Portalinfo, "<<<from dbheader $rootScope.PortalLocation");
             displayLeftmenu();
+        });
+
+        $rootScope.$on("updateUser",function (event, Portalinfo) {
+            self.getmenu(email);
         });
    }
 }());
