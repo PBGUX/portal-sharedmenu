@@ -76,7 +76,7 @@
        '          </a>'+
        '        </li>'+
        '        <li ng-if="menuItem.dropdownMenu" style="width:250px;padding:20px;cursor: default;">'+
-       '           <div ng-if="MenuCtrl.myapis" class="mute" style="padding-bottom:10px;">My Apis</div>'+
+       '           <div ng-if="MenuCtrl.myapis" class="mute" style="padding-bottom:10px;">My APIs</div>'+
        '           <span ng-repeat="s in MenuCtrl.products.subscribed">'+
        '               <span ng-if="menuItem.dropdownMenu[s].type == \'html\'" ng-bind-html="MenuCtrl.renderHtml(menuItem.dropdownMenu[s].htmlCode)"></span>'+
        '           </span>'+
