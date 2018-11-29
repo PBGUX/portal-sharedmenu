@@ -126,13 +126,23 @@
        self.spinnerRun = true;
        var email;
        
-       $http.get(window.oktaHostURL+'api/v1/sessions/me', {withCredentials: true})
-       .then(function(response) {
-           email = (typeof response.data !== 'undefined' && typeof response.data.login !== 'undefined') ? response.data.login : 'unauth';
-           self.getmenu(email);
-       }, function(response) {
-           self.getmenu('unauth');
-       });
+	   self.oktaCallme = function(){
+		   $http.get(window.oktaHostURL+'api/v1/sessions/me', {withCredentials: true})
+		   .then(function(response) {
+			   email = (typeof response.data !== 'undefined' && typeof response.data.login !== 'undefined') ? response.data.login : 'unauth';
+			   self.getmenu(email);
+		   }, function(response) {
+			   self.getmenu('unauth');
+		   });
+        }
+
+        if(typeof window.oktaHostURL === 'undefined'){
+            setTimeout(function(){
+               self.oktaCallme();
+            }, 900);
+        }else{
+            self.oktaCallme(); 
+        }
 
         self.getmenu = function(login){
             $http.get('/api/menu/build/'+login+'/mainMenu/'+$rootScope.currentPortal+'/'+productType)
